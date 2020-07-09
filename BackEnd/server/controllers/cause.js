@@ -30,11 +30,11 @@ export function createCause(req, res) {
 
 export function getSingleCause(req, res){
     const id = req.params.causeId;
-    Cause.findOne({_id: id})
+    Cause.findById(id)
         .then((singleCause)=>{
             res.status(200).json({
                 success: true,
-                message: 'more  ${singleCause.title}',
+                message: singleCause.title,
                 Cause: singleCause
             })
         })
@@ -47,16 +47,13 @@ export function getSingleCause(req, res){
         })
 }
 
+
 // Get all causes
 export function getAllCause(req, res){
     Cause.find()
         .select('_id title description')
         .then((allCause) => {
-            return res.status(200).json({
-                success: true,
-                message: 'A list of all causes',
-                Cause: allCause,
-            });
+            return res.status(200).json(allCause);
         })
         .catch((err) => {
             res.status(500).json({
@@ -65,4 +62,43 @@ export function getAllCause(req, res){
                 error: err.message,
             });
         });
+}
+
+export function updateCause(req, res) {
+    const id = req.params.causeId;
+    const updateObject = req.body;
+
+    Cause.update({_id: id}, {$set: updateObject})
+        .exec()
+        .then(()=>{
+            return res.status(200).json({
+                success: true,
+                message: 'cause updated',
+                updateCause: updateObject
+            });
+        })
+        .catch((error)=> {
+            res.status(500).json({
+                success: false,
+                message: 'update failed'
+            })
+        });
+}
+
+export function deleteCause(req, res){
+    const id = req.params.causeId;
+    Cause.findByIdAndDelete(id)
+    .exec()
+    .then(()=>{
+        return res.status(204).json({
+            success: true,
+            message: 'deleted successfully!',
+        })
+    })
+    .catch((error)=>{
+        res.status(500).json({
+            success: false,
+            message: 'deleted error'
+        })
+    })
 }
