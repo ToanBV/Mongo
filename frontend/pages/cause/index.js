@@ -1,16 +1,31 @@
-import { DatePicker } from 'antd';
 import useSWR from 'swr';
-import { Layout, Menu, Breadcrumb } from 'antd';
-import { UserOutlined, LaptopOutlined, NotificationOutlined } from '@ant-design/icons';
+import { List, Card, Layout } from 'antd';
 
-const { SubMenu } = Menu;
-const { Header, Content, Sider } = Layout;
+const ListItem = List.Item;
 
-// const fetcher = (...args) => fetch(...args).then(res => res.json())
+const fetcher = (...args) => fetch(...args).then(res => res.json())
 
 export default function Cause(){
 
+    const { data, error } = useSWR(process.env.API_URL + '/causes', fetcher)
+    console.log(process.env.API_URL)
     return(
-        <div className="cause">day la cause</div>
+        <List
+            grid={{
+                gutter: 8,
+                xs: 1,
+                sm: 2,
+                md: 4,
+                lg: 4,
+                xl: 6,
+                xxl: 8,
+            }}
+            dataSource = {data}
+            renderItem = {item => (
+                <ListItem>
+                    <Card title={item.title}>{item.description}</Card>
+                </ListItem>
+            )}
+        />
     )
 }
