@@ -26,9 +26,10 @@ export default function Cause(){
                 renderItem = {item => (
                     <ListItem>
                         <Card
-                            title={item.title}
+                            title="test"
                             hoverable
                             extra={<a href={'/cause/' + item._id} >View detail</a>}
+                            cover={<img alt="example" src="https://i.ibb.co/8b2VQXK/ngoc.jpg" />}
                         >
                             {item.description}
                         </Card>
