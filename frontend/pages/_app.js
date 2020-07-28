@@ -1,7 +1,6 @@
-import '../public/assets/global.css';
 import { Layout } from 'antd';
 import NavBar from '../components/NavBar';
-
+import '../public/assets/global.less';
 
 const { Header, Content, Footer } = Layout;
 
