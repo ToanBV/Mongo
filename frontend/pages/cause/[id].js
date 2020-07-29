@@ -13,7 +13,48 @@ const CauseDetail = () => {
     const { id } = router.query;
     const link = process.env.API_URL + '/causes/' + id;
     const { data, error } = useSWR(link, fetcher)
-    console.log(data)
+
+    if (error) return <div>failed to load</div>
+    if (!data) return <div>loading....</div>
+
+    const originData = [];
+    console.log(data.Cause)
+    data.Cause.map((item)=>{
+        originData.push({
+            key: item._id.toString(),
+            titel: item.titel,
+            description: item.description
+        });
+    });
+    
+    const columns = [
+        {
+            titel: 'title',
+            dataIndex: 'title',
+            width: '40%',
+            editable: true,
+        },
+        {
+            titel: 'description',
+            dataIndex: 'description',
+            width: '40%',
+            editable: true,
+        },
+        {
+            title: 'operation',
+            dataIndex: 'operation',
+        }
+    ]
+
+    const [form] = Form.useForm();
+    const [datas, setData] = useState(originData);
+
+    // mergedColumns = columns.map(col=>{
+    //     if(!col.editable){
+    //         return col
+    //     }
+    // })
+
     return(
         <>
             <Button
@@ -22,6 +63,13 @@ const CauseDetail = () => {
             >
                 Add Cause
             </Button>
+            <Form form={form} component={false}>
+                <Table
+                    bordered
+                    dataSource={datas}
+                    columns={columns}
+                />
+            </Form>
         </>
 
     )
