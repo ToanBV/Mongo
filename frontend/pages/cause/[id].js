@@ -1,7 +1,26 @@
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import { Table, Input, Button, Popconfirm, Form } from 'antd';
+
+const EditableContext = React.createContext();
+const EditableRow = ({ index, ...props }) => {
+    const [form] = Form.useForm();
+    return (
+        <Form form={form} component={false}>
+            <EditableContext.Provider value={form}>
+                <tr {...props} />
+            </EditableContext.Provider>
+        </Form>
+    );
+};
+
+const handleDelete = key => {
+    console.log(key)
+};
+
+
 const fetcher = (...args) => fetch(...args).then(res => res.json())
+
 
 // const handleAdd => (){
 
@@ -18,36 +37,37 @@ const CauseDetail = () => {
     if (!data) return <div>loading....</div>
 
     const originData = [];
-    console.log(data.Cause)
-    data.Cause.map((item)=>{
-        originData.push({
-            key: item._id.toString(),
-            titel: item.titel,
-            description: item.description
-        });
+    originData.push({
+        key: data.Cause.id,
+        title: data.Cause.title,
+        description: data.Cause.description
     });
-    
+
     const columns = [
         {
-            titel: 'title',
+            title: 'Title',
             dataIndex: 'title',
             width: '40%',
             editable: true,
         },
         {
-            titel: 'description',
+            title: 'Description',
             dataIndex: 'description',
             width: '40%',
             editable: true,
         },
         {
-            title: 'operation',
-            dataIndex: 'operation',
+            title: 'action',
+            dataIndex: 'action',
+            render: (text, record) =>
+                originData.length >= 1 ? (
+                    <Popconfirm title="Sure to delete?" onConfirm={() => handleDelete(record.key)}>
+                        <a>Delete</a>
+                    </Popconfirm>
+                ) : null,
         }
     ]
 
-    const [form] = Form.useForm();
-    const [datas, setData] = useState(originData);
 
     // mergedColumns = columns.map(col=>{
     //     if(!col.editable){
@@ -55,7 +75,7 @@ const CauseDetail = () => {
     //     }
     // })
 
-    return(
+    return (
         <>
             <Button
                 type="primary"
@@ -63,13 +83,11 @@ const CauseDetail = () => {
             >
                 Add Cause
             </Button>
-            <Form form={form} component={false}>
-                <Table
-                    bordered
-                    dataSource={datas}
-                    columns={columns}
-                />
-            </Form>
+            <Table
+                bordered
+                dataSource={originData}
+                columns={columns}
+            />
         </>
 
     )
