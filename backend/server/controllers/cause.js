@@ -10,6 +10,8 @@ export function createCause(req, res) {
         description: req.body.description,
     });
 
+    console.log(req.body);
+
     return cause
         .save()
         .then((newCause) => {

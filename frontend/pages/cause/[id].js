@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import { Table, Input, Button, Popconfirm, Form } from 'antd';
+const fetcher = (...args) => fetch(...args).then(res => res.json())
 
 const EditableContext = React.createContext();
 const EditableRow = ({ index, ...props }) => {
@@ -15,11 +16,14 @@ const EditableRow = ({ index, ...props }) => {
 };
 
 const handleDelete = key => {
-    console.log(key)
+    let link = process.env.API_URL + '/causes/' + key;
+
+    return fetch(link, {
+        method: 'delete'
+    }).then(exp => {
+        console.log('da xoa');
+    })
 };
-
-
-const fetcher = (...args) => fetch(...args).then(res => res.json())
 
 
 // const handleAdd => (){
@@ -35,10 +39,10 @@ const CauseDetail = () => {
 
     if (error) return <div>failed to load</div>
     if (!data) return <div>loading....</div>
-
+    if (!data.success) return <div>failed</div>
     const originData = [];
     originData.push({
-        key: data.Cause.id,
+        key: data.Cause._id,
         title: data.Cause.title,
         description: data.Cause.description
     });
