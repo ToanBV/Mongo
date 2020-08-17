@@ -1,7 +1,6 @@
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import { Table, Input, Button, Popconfirm, Form } from 'antd';
-const fetcher = (...args) => fetch(...args).then(res => res.json())
 
 const EditableContext = React.createContext();
 const EditableRow = ({ index, ...props }) => {
@@ -15,15 +14,15 @@ const EditableRow = ({ index, ...props }) => {
     );
 };
 
-const handleDelete = key => {
-    let link = process.env.API_URL + '/causes/' + key;
-
-    return fetch(link, {
+const handleDelete = async key => {
+    let url = process.env.API_URL + '/causes/' + key;
+    return fetch(url, {
         method: 'delete'
-    }).then(exp => {
-        console.log('da xoa');
-    })
+    }).then(res => console.log('detete ok'));
 };
+
+
+const fetcher = (...args) => fetch(...args).then(res => res.json())
 
 
 // const handleAdd => (){
@@ -39,7 +38,7 @@ const CauseDetail = () => {
 
     if (error) return <div>failed to load</div>
     if (!data) return <div>loading....</div>
-    if (!data.success) return <div>failed</div>
+
     const originData = [];
     originData.push({
         key: data.Cause._id,
@@ -80,11 +79,20 @@ const CauseDetail = () => {
     // })
 
     return (
-        <Table
-            bordered
-            dataSource={originData}
-            columns={columns}
-        />
+        <>
+            <Button
+                type="primary"
+                style={{ marginBottom: 16 }}
+            >
+                Add Cause
+            </Button>
+            <Table
+                bordered
+                dataSource={originData}
+                columns={columns}
+            />
+        </>
+
     )
 }
 

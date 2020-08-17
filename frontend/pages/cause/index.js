@@ -1,5 +1,6 @@
 import useSWR from 'swr';
-import { List, Card, Layout, Typography } from 'antd';
+import Link from 'next/link';
+import { List, Card, Layout, Typography, Button } from 'antd';
 
 const ListItem = List.Item;
 const { Title } = Typography;
@@ -11,6 +12,14 @@ export default function Cause(){
     const { data, error } = useSWR(process.env.API_URL + '/causes', fetcher)
     return(
         <Layout className="container cause-page">
+            <Link href="/cause/create">
+                <Button
+                    type="primary"
+                    style={{ marginBottom: 16 }}
+                >
+                    Add Cause
+                </Button>
+            </Link>
             <Title type="danger" level={3}>List Causes</Title>
             <List
                 grid={{
@@ -26,7 +35,7 @@ export default function Cause(){
                 renderItem = {item => (
                     <ListItem>
                         <Card
-                            title="test"
+                            title={ item.title }
                             hoverable
                             extra={<a href={'/cause/' + item._id} >View detail</a>}
                             cover={<img alt="example" src="https://i.ibb.co/8b2VQXK/ngoc.jpg" />}

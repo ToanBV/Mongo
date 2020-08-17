@@ -5,12 +5,13 @@ const onFinish = async values => {
     const res = await fetch(link, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
         },
-        body: values.cause,
-    })
+        body: JSON.stringify(values.cause),
+    });
 
-    console.log(res);
+    if (res.status == 201) alert('add ok');
 };
 
 export default function create() {
